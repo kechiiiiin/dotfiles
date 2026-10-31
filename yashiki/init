@@ -70,6 +70,7 @@ yashiki rule-add --app-name "System Settings" float
 yashiki rule-add --app-name "システム設定" float
 yashiki rule-add --app-name "写真" float
 yashiki rule-add --subrole Dialog float
+yashiki rule-add --subrole SystemDialog float
 # Chrome が一瞬出して消す小窓（タイトルなし・AXUnknown／subrole なし）を並べると、本体の幅が伸び縮みする
 yashiki rule-add --app-name "Google Chrome" --subrole AXUnknown ignore
 yashiki rule-add --app-name "Google Chrome" --subrole none ignore
