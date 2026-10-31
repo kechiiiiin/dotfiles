@@ -74,6 +74,11 @@ done
 # dokusho・yonbun は sanbun へのリンク（名前で比率を切り替える）
 ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-dokusho"
 ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-yonbun"
+# ログイン時に yashiki を起動する（LaunchAgent）
+mkdir -p ~/Library/LaunchAgents
+copy_file "$DOTFILES_DIR/yashiki/com.kechiiiiin.yashiki.plist" "$HOME/Library/LaunchAgents/com.kechiiiiin.yashiki.plist"
+launchctl bootout "gui/$(id -u)/com.kechiiiiin.yashiki" 2>/dev/null || true
+launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.kechiiiiin.yashiki.plist" || true
 # winowner はウィンドウの持ち主アプリを調べる小さな道具。その PC でビルドする（Xcode Command Line Tools が要る）
 if command -v swiftc &>/dev/null; then
     swiftc -O -o "$HOME/.config/yashiki/layouts/winowner" "$HOME/.config/yashiki/layouts/winowner.swift"

@@ -26,6 +26,7 @@ macOS用の個人設定ファイル集
 | `yashiki/layouts/yashiki-layout-kinto` | yashiki の自作レイアウト: 横に均等割り |
 | `yashiki/layouts/yashiki-layout-sanbun` | yashiki の自作レイアウト: Obsidian を右 1/3 に固定（`yonbun`＝右 1/4、`dokusho`＝読書用はこのファイルへのリンク） |
 | `yashiki/layouts/yashiki-layout-jiyuu` | yashiki の自作レイアウト: 何も並べない（フリーのタグ用） |
+| `yashiki/com.kechiiiiin.yashiki.plist` | ログイン時に yashiki を起動する LaunchAgent（setup.sh が登録する） |
 | `yashiki/layouts/winowner.swift` | ウィンドウの持ち主アプリを調べる道具。setup.sh がその PC でビルドする |
 
 ## セットアップ
