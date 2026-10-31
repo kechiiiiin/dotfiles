@@ -34,6 +34,8 @@ yashiki rule-add --app-name Discord output "$MAC"
 yashiki rule-add --app-name Discord tags 16
 yashiki rule-add --app-name cmux output "$MAC"
 yashiki rule-add --app-name cmux tags 64
+# cmux のアップデート後に出る cmux cloud の案内は並べない
+yashiki rule-add --app-name cmux --title "cmux cloud" float
 yashiki rule-add --app-name ChatGPT output "$MAC"
 yashiki rule-add --app-name ChatGPT tags 128
 
