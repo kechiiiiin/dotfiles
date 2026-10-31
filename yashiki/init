@@ -71,7 +71,7 @@ yashiki rule-add --app-name "システム設定" float
 yashiki rule-add --app-name "写真" float
 yashiki rule-add --subrole Dialog float
 
-# roBa（Conductor）から送る Cmd+Ctrl+Option+Shift の組み合わせ（2026-10-31）
+# Conductor キーボードから送る Cmd+Ctrl+Option+Shift の組み合わせ（2026-10-31）
 # W か O の長押しで Layer 10（window）。右手の上段 Y U I O = DELL タグ1〜4、中段 H J K L - = Mac タグ5〜9、左手 = 操作
 # J と T は別の用途で使用中なので使わない
 H="cmd-ctrl-alt-shift"
