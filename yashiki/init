@@ -63,6 +63,7 @@ yashiki bind alt-shift-p output-send prev
 
 # Layout
 yashiki bind alt-r retile
+yashiki bind alt-x exec "$HOME/.config/yashiki/seiretsu"
 
 # Common float rules
 yashiki rule-add --app-name Finder float
@@ -101,6 +102,8 @@ yashiki bind "$H-g" output-focus next
 yashiki bind "$H-z" window-swap next
 yashiki bind "$H-c" window-toggle-float
 yashiki bind "$H-v" output-send next
+# 整列（2枚目の Chrome・cmux を決めた場所へ送り直して並べ直す。送り先は hosts/<名前>.seiretsu）
+yashiki bind "$H-x" exec "$HOME/.config/yashiki/seiretsu"
 
 # PC ごとの配置（タグとアプリの対応・タグごとの並べ方）
 # ~/.config/yashiki/hosts/<この Mac の LocalHostName>.sh を読む。無ければ配置なし（全部 tatami で並ぶ）

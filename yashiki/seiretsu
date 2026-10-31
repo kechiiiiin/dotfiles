@@ -1,0 +1,65 @@
+#!/bin/sh
+# 整列: 同じアプリの2枚目（Chrome・cmux など）を決めた場所へ送り直して並べ直す
+# yashiki は規則をアプリ名で当てるので、再起動のたびに2枚とも同じ場所へ戻る。それを1キーで直す
+# 送り先は hosts/<LocalHostName>.seiretsu に1行ずつ: アプリ名|元の画面|元のタグ|送り先の画面|送り先のタグ
+#   画面は MAC か DELL、タグはビットマスク（例: Google Chrome|DELL|2|MAC|32）
+# 送り先に1枚も無く、元の場所に2枚以上あるときだけ、元の場所の最後の1枚を送る
+CONF="$HOME/.config/yashiki/hosts/$(scutil --get LocalHostName).seiretsu"
+
+OUTPUTS=$(yashiki list-outputs)
+MAC=$(printf '%s\n' "$OUTPUTS" | sed -n 's/^\([0-9][0-9]*\): Built-in.*/\1/p' | head -1)
+DELL=$(printf '%s\n' "$OUTPUTS" | grep -v 'Built-in' | sed -n 's/^\([0-9][0-9]*\): .*/\1/p' | head -1)
+[ -n "$MAC" ] || MAC=$(printf '%s\n' "$OUTPUTS" | sed -n 's/^\([0-9][0-9]*\): .*/\1/p' | head -1)
+[ -n "$DELL" ] || DELL="$MAC"
+# いま見えているタグ（最後に戻す）
+VIEW_MAC=$(printf '%s\n' "$OUTPUTS" | awk -v o="$MAC" '$1==o":"{f=1;next} /^[0-9]+:/{f=0} f&&/visible_tags/{print $2;exit}')
+VIEW_DELL=$(printf '%s\n' "$OUTPUTS" | awk -v o="$DELL" '$1==o":"{f=1;next} /^[0-9]+:/{f=0} f&&/visible_tags/{print $2;exit}')
+
+out_of() { [ "$1" = MAC ] && echo "$MAC" || echo "$DELL"; }
+
+# 並べる対象のウィンドウを「ID 画面 タグ」で出す（浮いているものは除く）
+wins() {
+  yashiki list-windows | grep -v '\[float\]' | grep -F ": $1 (" |
+    sed -n 's/^\([0-9][0-9]*\): .*\[tags=\([0-9]*\), output=\([0-9]*\),.*/\1 \3 \2/p'
+}
+
+focus_id() {
+  for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    [ "$(yashiki focused-window)" = "$1" ] && return 0
+    if [ $i = 5 ] || [ $i = 10 ]; then yashiki output-focus next; else yashiki window-focus next; fi
+    sleep 0.2
+  done
+  [ "$(yashiki focused-window)" = "$1" ]
+}
+
+moved=0
+[ -f "$CONF" ] && while IFS='|' read -r app from_o from_t to_o to_t <&3; do
+  case "$app" in ''|'#'*) continue ;; esac
+  fo=$(out_of "$from_o"); to=$(out_of "$to_o")
+  list=$(wins "$app")
+  # 送り先にもう居れば何もしない
+  printf '%s\n' "$list" | awk -v o="$to" -v t="$to_t" '$2==o && $3==t{f=1} END{exit !f}' && continue
+  src=$(printf '%s\n' "$list" | awk -v o="$fo" -v t="$from_t" '$2==o && $3==t{print $1}')
+  [ "$(printf '%s\n' "$src" | grep -c .)" -ge 2 ] || continue
+  id=$(printf '%s\n' "$src" | tail -1)
+  yashiki tag-view --output "$fo" "$from_t"; sleep 0.4
+  focus_id "$id" || continue
+  if [ "$fo" != "$to" ]; then
+    yashiki output-send next; sleep 0.5
+    t=$(yashiki list-windows | sed -n "s/^$id: .*tags=\([0-9]*\),.*/\1/p")
+    yashiki tag-view --output "$to" "$t"; sleep 0.4
+    focus_id "$id" || continue
+  fi
+  yashiki window-move-to-tag "$to_t"; sleep 0.4
+  moved=1
+done 3< "$CONF"
+
+[ -n "$VIEW_MAC" ] && yashiki tag-view --output "$MAC" "$VIEW_MAC"
+[ -n "$VIEW_DELL" ] && [ "$DELL" != "$MAC" ] && yashiki tag-view --output "$DELL" "$VIEW_DELL"
+# 別の画面へ移した直後は位置がずれることがある（すぐ並べ直しても効かない）ので、間を置いて3回並べ直す
+# retile は画面ごと（--output なしだとフォーカスのある画面だけ）
+for n in 1 2 3; do
+  sleep 1.2
+  yashiki retile --output "$MAC"
+  [ "$DELL" != "$MAC" ] && yashiki retile --output "$DELL"
+done

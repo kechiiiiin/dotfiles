@@ -1,0 +1,5 @@
+# 整列キー（W+X／Option+X）で直す2枚目: アプリ名|元の画面|元のタグ|送り先の画面|送り先のタグ
+# Chrome は全部 DELL タグ2に出るので、1枚を Mac タグ6へ
+Google Chrome|DELL|2|MAC|32
+# cmux は全部 Mac タグ7に出るので、1枚を DELL タグ4（勉強）へ
+cmux|MAC|64|DELL|8

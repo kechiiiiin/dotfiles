@@ -64,11 +64,12 @@ copy_file "$DOTFILES_DIR/claude/scripts/save-conversation.py" "$HOME/.claude/scr
 
 # yashiki（タグ型ウィンドウマネージャー）: init と自作レイアウト
 copy_file "$DOTFILES_DIR/yashiki/init" "$HOME/.config/yashiki/init"
+copy_file "$DOTFILES_DIR/yashiki/seiretsu" "$HOME/.config/yashiki/seiretsu"
 for f in yashiki-layout-kinto yashiki-layout-sanbun yashiki-layout-jiyuu winowner.swift; do
     copy_file "$DOTFILES_DIR/yashiki/layouts/$f" "$HOME/.config/yashiki/layouts/$f"
 done
-# PC ごとの配置（hosts/<LocalHostName>.sh）。init が自分の名前のファイルだけを読む
-for f in "$DOTFILES_DIR"/yashiki/hosts/*.sh; do
+# PC ごとの配置（hosts/<LocalHostName>.sh）と整列の送り先（.seiretsu）。自分の名前のファイルだけが読まれる
+for f in "$DOTFILES_DIR"/yashiki/hosts/*.sh "$DOTFILES_DIR"/yashiki/hosts/*.seiretsu; do
     copy_file "$f" "$HOME/.config/yashiki/hosts/$(basename "$f")"
 done
 # benkyou・yonbun は sanbun へのリンク（名前で比率を切り替える）
