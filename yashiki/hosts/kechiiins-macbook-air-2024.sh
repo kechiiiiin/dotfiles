@@ -7,15 +7,15 @@ yashiki layout-set kinto --tags 2 --output "$DELL"
 # DELL タグ1 は Obsidian を右 1/3、タグ3（DaVinci）は右 1/4 に固定（同じ Obsidian が複数のタグにいるので順番では決められない）
 yashiki layout-set sanbun --tags 1 --output "$DELL"
 yashiki layout-set yonbun --tags 4 --output "$DELL"
-# DELL タグ4（勉強）は Claude・Kindle 上と Obsidian 下・cmux を 1/3 ずつ（cmux が無ければ Claude 1/2・右に Kindle と Obsidian）
-yashiki layout-set dokusho --tags 8 --output "$DELL"
+# DELL タグ4（勉強）は Claude 左 1/2、右上 Kindle、右下 Obsidian｜cmux（cmux が無ければ右下は Obsidian だけ）
+yashiki layout-set benkyou --tags 8 --output "$DELL"
 # フリーのタグは並べない（jiyuu）: DELL はタグ10（P）、Mac はタグ9（-）
 # タグごとのレイアウトは画面をまたいで共通（--output は効かない）ので、両画面で使っていない番号にする
 yashiki layout-set jiyuu --tags 512 --output "$DELL"
 yashiki layout-set jiyuu --tags 256 --output "$MAC"
 
 # 定位置（2026-10-31 改）上から番号・左から並べる
-# DELL: 1=Claude 2/3+Obsidian 1/3 ／ 2=Chrome+Chrome 1/2ずつ ／ 3=DaVinci 3/4+Obsidian 1/4 ／ 4=勉強 Claude+Kindle 上・Obsidian 下+cmux 1/3ずつ
+# DELL: 1=Claude 2/3+Obsidian 1/3 ／ 2=Chrome+Chrome 1/2ずつ ／ 3=DaVinci 3/4+Obsidian 1/4 ／ 4=勉強 Claude 1/2+右上 Kindle+右下 Obsidian｜cmux
 # Mac : 5=Discord ／ 6=Chrome ／ 7=cmux ／ 8=ChatGPT ／ 9=その他（浮いているもの）
 # Claude はタグ1と4（1|8=9）、Obsidian はタグ1・3・4（1|4|8=13）
 # cmux は2枚。DELL タグ4用の1枚は Mac タグ7に出るので、Option+Shift+O で送ってから Option+Shift+4（移した直後にずれたら W+R で並べ直す）

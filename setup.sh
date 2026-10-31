@@ -71,8 +71,8 @@ done
 for f in "$DOTFILES_DIR"/yashiki/hosts/*.sh; do
     copy_file "$f" "$HOME/.config/yashiki/hosts/$(basename "$f")"
 done
-# dokusho・yonbun は sanbun へのリンク（名前で比率を切り替える）
-ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-dokusho"
+# benkyou・yonbun は sanbun へのリンク（名前で比率を切り替える）
+ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-benkyou"
 ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-yonbun"
 # ログイン時に yashiki を起動する（LaunchAgent）
 mkdir -p ~/Library/LaunchAgents

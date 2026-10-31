@@ -24,7 +24,7 @@ macOS用の個人設定ファイル集
 | `yashiki/init` | [yashiki](https://github.com/typester/yashiki)（タグ型ウィンドウマネージャー）の起動スクリプト。全 PC 共通のキー割り当て・画面の見分け方 |
 | `yashiki/hosts/<LocalHostName>.sh` | yashiki の PC ごとの配置（タグとアプリの対応・タグごとの並べ方）。新しい PC は `scutil --get LocalHostName` の名前でファイルを足す |
 | `yashiki/layouts/yashiki-layout-kinto` | yashiki の自作レイアウト: 横に均等割り |
-| `yashiki/layouts/yashiki-layout-sanbun` | yashiki の自作レイアウト: Obsidian を右 1/3 に固定（`yonbun`＝右 1/4、`dokusho`＝読書用はこのファイルへのリンク） |
+| `yashiki/layouts/yashiki-layout-sanbun` | yashiki の自作レイアウト: Obsidian を右 1/3 に固定（`yonbun`＝右 1/4、`benkyou`＝勉強用はこのファイルへのリンク） |
 | `yashiki/layouts/yashiki-layout-jiyuu` | yashiki の自作レイアウト: 何も並べない（フリーのタグ用） |
 | `yashiki/com.kechiiiiin.yashiki.plist` | ログイン時に yashiki を起動する LaunchAgent（setup.sh が登録する） |
 | `yashiki/layouts/winowner.swift` | ウィンドウの持ち主アプリを調べる道具。setup.sh がその PC でビルドする |

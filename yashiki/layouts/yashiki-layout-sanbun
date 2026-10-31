@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # sanbun: Obsidian は右 1/3、それ以外は左 2/3（左が複数なら縦に積む）
-# dokusho の名前で呼ばれたら勉強用（cmux があれば Claude・Kindle と Obsidian（上から）・cmux を 1/3 ずつ、無ければ左 1/2・右に Kindle と Obsidian）
+# benkyou の名前で呼ばれたら勉強用（左 1/2、右上に Kindle、右下は Obsidian。cmux があれば右下を Obsidian と cmux で左右に分ける）
 # 同じ Obsidian がタグ1（Claude）とタグ3（DaVinci）にいても、並び順に関係なく右へ置くため
 # アプリ名は同じフォルダの winowner（CGWindowList）で引く。yashiki list-windows は呼ぶと固まる
 # 引けなければ渡された順のまま最後を右へ
@@ -9,11 +9,11 @@ gap = 10
 ratio = 0.667
 RIGHT_APPS = ("Obsidian",)
 FAR_APPS = ()
-# dokusho（このファイルへのリンク名）: cmux があれば 1/3 ずつの3列、無ければ左 1/2・右に Kindle 上・Obsidian 下
+# benkyou（このファイルへのリンク名）: 左 1/2、右上 Kindle、右下 Obsidian（cmux があれば右下を Obsidian｜cmux に分ける）
 # yonbun（同じくリンク名）: 左 3/4、Obsidian 右 1/4（DaVinci のタグ）
 if os.path.basename(__file__).endswith("yonbun"):
     ratio = 0.75
-if os.path.basename(__file__).endswith("dokusho"):
+if os.path.basename(__file__).endswith("benkyou"):
     ratio = 0.5
     RIGHT_APPS = ("Kindle", "Obsidian")
     FAR_APPS = ("cmux",)
@@ -60,8 +60,13 @@ while True:
         if len(ids) > 1 and not all(i in names for i in ids):
             left, right, far = ids[:-1], ids[-1:], []
         if left and right and far:
-            cw = (w - gap * 2) // 3
-            out = column(left, 0, cw, h) + column(right, cw + gap, cw, h) + column(far, w - cw, cw, h)
+            lw = int((w - gap) * ratio)
+            rx, rw = lw + gap, w - lw - gap
+            th = (h - gap) // 2
+            top, bottom = right[:1], right[1:] + far
+            bw = (rw - gap * (len(bottom) - 1)) // max(len(bottom), 1)
+            out = column(left, 0, lw, h) + [{"id": top[0], "x": rx, "y": 0, "width": rw, "height": th}]
+            out += [{"id": wid, "x": rx + k * (bw + gap), "y": th + gap, "width": bw, "height": h - th - gap} for k, wid in enumerate(bottom)]
         elif left and right:
             lw = int((w - gap) * ratio)
             out = column(left, 0, lw, h) + column(right, lw + gap, w - lw - gap, h)
