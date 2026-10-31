@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # sanbun: Obsidian は右 1/3、それ以外は左 2/3（左が複数なら縦に積む）
-# benkyou の名前で呼ばれたら勉強用（左 1/2、右上に Kindle、右下は Obsidian。cmux があれば右下を Obsidian と cmux で左右に分ける）
+# benkyou の名前で呼ばれたら勉強用（左 1/2、右上は Obsidian、右下に Kindle。cmux があれば右上を Obsidian と cmux で左右に分ける）
 # 同じ Obsidian がタグ1（Claude）とタグ3（DaVinci）にいても、並び順に関係なく右へ置くため
 # アプリ名は同じフォルダの winowner（CGWindowList）で引く。yashiki list-windows は呼ぶと固まる
 # 引けなければ渡された順のまま最後を右へ
@@ -9,13 +9,13 @@ gap = 10
 ratio = 0.667
 RIGHT_APPS = ("Obsidian",)
 FAR_APPS = ()
-# benkyou（このファイルへのリンク名）: 左 1/2、右上 Kindle、右下 Obsidian（cmux があれば右下を Obsidian｜cmux に分ける）
+# benkyou（このファイルへのリンク名）: 左 1/2、右上 Obsidian、右下 Kindle（cmux があれば右上を Obsidian｜cmux に分ける）
 # yonbun（同じくリンク名）: 左 3/4、Obsidian 右 1/4（DaVinci のタグ）
 if os.path.basename(__file__).endswith("yonbun"):
     ratio = 0.75
 if os.path.basename(__file__).endswith("benkyou"):
     ratio = 0.5
-    RIGHT_APPS = ("Kindle", "Obsidian")
+    RIGHT_APPS = ("Obsidian", "Kindle")
     FAR_APPS = ("cmux",)
 WINOWNER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "winowner")
 
@@ -34,6 +34,13 @@ def apps(ids):
         if len(a) == 2 and a[0].isdigit():
             _names[int(a[0])] = a[1]
     return _names
+
+def row(ids, x, y, w, h):
+    n = len(ids)
+    if not n:
+        return []
+    cw = (w - gap * (n - 1)) // n
+    return [{"id": wid, "x": x + i * (cw + gap), "y": y, "width": cw, "height": h} for i, wid in enumerate(ids)]
 
 def column(ids, x, w, h):
     n = len(ids)
@@ -63,10 +70,8 @@ while True:
             lw = int((w - gap) * ratio)
             rx, rw = lw + gap, w - lw - gap
             th = (h - gap) // 2
-            top, bottom = right[:1], right[1:] + far
-            bw = (rw - gap * (len(bottom) - 1)) // max(len(bottom), 1)
-            out = column(left, 0, lw, h) + [{"id": top[0], "x": rx, "y": 0, "width": rw, "height": th}]
-            out += [{"id": wid, "x": rx + k * (bw + gap), "y": th + gap, "width": bw, "height": h - th - gap} for k, wid in enumerate(bottom)]
+            top, bottom = right[:-1] + far, right[-1:]
+            out = column(left, 0, lw, h) + row(top, rx, 0, rw, th) + row(bottom, rx, th + gap, rw, h - th - gap)
         elif left and right:
             lw = int((w - gap) * ratio)
             out = column(left, 0, lw, h) + column(right, lw + gap, w - lw - gap, h)
