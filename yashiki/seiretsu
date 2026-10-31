@@ -3,7 +3,8 @@
 # yashiki は規則をアプリ名で当てるので、再起動のたびに2枚とも同じ場所へ戻る。それを1キーで直す
 # 送り先は hosts/<LocalHostName>.seiretsu に1行ずつ: アプリ名|元の画面|元のタグ|送り先の画面|送り先のタグ
 #   画面は MAC か DELL、タグはビットマスク（例: Google Chrome|DELL|2|MAC|32）
-# 送り先に1枚も無く、元の場所に2枚以上あるときだけ、元の場所の最後の1枚を送る
+# 送り先に1枚も無く、元の場所に2枚以上あるときだけ、元の場所でいちばん新しい1枚（ウィンドウ ID が最大）を送る
+# 並び順で選ぶと毎回変わる（2026-10-31 DELL と Mac の cmux が入れ替わった）
 CONF="$HOME/.config/yashiki/hosts/$(scutil --get LocalHostName).seiretsu"
 
 OUTPUTS=$(yashiki list-outputs)
@@ -41,7 +42,7 @@ moved=0
   printf '%s\n' "$list" | awk -v o="$to" -v t="$to_t" '$2==o && $3==t{f=1} END{exit !f}' && continue
   src=$(printf '%s\n' "$list" | awk -v o="$fo" -v t="$from_t" '$2==o && $3==t{print $1}')
   [ "$(printf '%s\n' "$src" | grep -c .)" -ge 2 ] || continue
-  id=$(printf '%s\n' "$src" | tail -1)
+  id=$(printf '%s\n' "$src" | sort -n | tail -1)
   yashiki tag-view --output "$fo" "$from_t"; sleep 0.4
   focus_id "$id" || continue
   if [ "$fo" != "$to" ]; then
