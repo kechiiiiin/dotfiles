@@ -24,7 +24,7 @@ macOS用の個人設定ファイル集
 | `yashiki/init` | [yashiki](https://github.com/typester/yashiki)（タグ型ウィンドウマネージャー）の起動スクリプト。全 PC 共通のキー割り当て・画面の見分け方 |
 | `yashiki/hosts/<LocalHostName>.sh` | yashiki の PC ごとの配置（タグとアプリの対応・タグごとの並べ方）。新しい PC は `scutil --get LocalHostName` の名前でファイルを足す |
 | `yashiki/seiretsu` | yashiki の整列キー（W+X／Option+X）。同じアプリの2枚目（Chrome・cmux など）が再起動で元の場所へ戻ったとき、決めた場所へ送り直して並べ直す |
-| `yashiki/hosts/<LocalHostName>.seiretsu` | 整列キーの送り先（PC ごと）。1行に `アプリ名|元の画面|元のタグ|送り先の画面|送り先のタグ` |
+| `yashiki/hosts/<LocalHostName>.seiretsu` | 整列キーの送り先（PC ごと）。1行に `アプリ名｜元の画面｜元のタグ｜送り先の画面｜送り先のタグ`（区切りは半角の縦棒） |
 | `yashiki/layouts/yashiki-layout-kinto` | yashiki の自作レイアウト: 横に均等割り |
 | `yashiki/layouts/yashiki-layout-sanbun` | yashiki の自作レイアウト: Obsidian を右 1/3 に固定（`yonbun`＝右 1/4、`benkyou`＝勉強用はこのファイルへのリンク） |
 | `yashiki/layouts/yashiki-layout-jiyuu` | yashiki の自作レイアウト: 何も並べない（フリーのタグ用） |
