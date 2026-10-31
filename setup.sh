@@ -40,6 +40,8 @@ mkdir -p ~/.config/laminate
 mkdir -p ~/.claude
 mkdir -p ~/.claude/hooks
 mkdir -p ~/.claude/scripts
+mkdir -p ~/.config/yashiki/layouts
+mkdir -p ~/.config/yashiki/hosts
 
 echo ""
 echo "Copying dotfiles..."
@@ -59,6 +61,26 @@ copy_file "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 copy_file "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 copy_file "$DOTFILES_DIR/claude/hooks/discord-notify.py" "$HOME/.claude/hooks/discord-notify.py"
 copy_file "$DOTFILES_DIR/claude/scripts/save-conversation.py" "$HOME/.claude/scripts/save-conversation.py"
+
+# yashiki（タグ型ウィンドウマネージャー）: init と自作レイアウト
+copy_file "$DOTFILES_DIR/yashiki/init" "$HOME/.config/yashiki/init"
+for f in yashiki-layout-kinto yashiki-layout-sanbun yashiki-layout-jiyuu winowner.swift; do
+    copy_file "$DOTFILES_DIR/yashiki/layouts/$f" "$HOME/.config/yashiki/layouts/$f"
+done
+# PC ごとの配置（hosts/<LocalHostName>.sh）。init が自分の名前のファイルだけを読む
+for f in "$DOTFILES_DIR"/yashiki/hosts/*.sh; do
+    copy_file "$f" "$HOME/.config/yashiki/hosts/$(basename "$f")"
+done
+# dokusho・yonbun は sanbun へのリンク（名前で比率を切り替える）
+ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-dokusho"
+ln -sf yashiki-layout-sanbun "$HOME/.config/yashiki/layouts/yashiki-layout-yonbun"
+# winowner はウィンドウの持ち主アプリを調べる小さな道具。その PC でビルドする（Xcode Command Line Tools が要る）
+if command -v swiftc &>/dev/null; then
+    swiftc -O -o "$HOME/.config/yashiki/layouts/winowner" "$HOME/.config/yashiki/layouts/winowner.swift"
+    echo "  Built: $HOME/.config/yashiki/layouts/winowner"
+else
+    echo "  ⚠ swiftc が無いので winowner をビルドしていません（xcode-select --install の後に setup.sh をやり直す）"
+fi
 
 # .envは既存がなければsampleからコピー（既存の設定を上書きしない）
 if [ ! -e "$HOME/.claude/.env" ]; then

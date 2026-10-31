@@ -21,6 +21,12 @@ macOS用の個人設定ファイル集
 | `claude/hooks/discord-notify.py` | Claude Code停止・通知時のDiscord通知スクリプト |
 | `claude/scripts/save-conversation.py` | 会話をObsidian vaultに自動保存するスクリプト |
 | `claude/.env.sample` | Claude Code用環境変数のテンプレート |
+| `yashiki/init` | [yashiki](https://github.com/typester/yashiki)（タグ型ウィンドウマネージャー）の起動スクリプト。全 PC 共通のキー割り当て・画面の見分け方 |
+| `yashiki/hosts/<LocalHostName>.sh` | yashiki の PC ごとの配置（タグとアプリの対応・タグごとの並べ方）。新しい PC は `scutil --get LocalHostName` の名前でファイルを足す |
+| `yashiki/layouts/yashiki-layout-kinto` | yashiki の自作レイアウト: 横に均等割り |
+| `yashiki/layouts/yashiki-layout-sanbun` | yashiki の自作レイアウト: Obsidian を右 1/3 に固定（`yonbun`＝右 1/4、`dokusho`＝読書用はこのファイルへのリンク） |
+| `yashiki/layouts/yashiki-layout-jiyuu` | yashiki の自作レイアウト: 何も並べない（フリーのタグ用） |
+| `yashiki/layouts/winowner.swift` | ウィンドウの持ち主アプリを調べる道具。setup.sh がその PC でビルドする |
 
 ## セットアップ
 
@@ -38,5 +44,7 @@ git clone git@github.com:keisuke-yamauch1/dotfiles.git ~/dotfiles
 
 - [Homebrew](https://brew.sh/)
 - [Starship](https://starship.rs/) - `brew install starship`
+- [yashiki](https://github.com/typester/yashiki) - `brew tap typester/yashiki && brew install --cask yashiki`（初回にアクセシビリティ権限を許可する）
+- Xcode Command Line Tools - `xcode-select --install`（yashiki の自作レイアウトの python3 と swiftc）
 - [Hack Nerd Font](https://www.nerdfonts.com/) - Ghostty・Starship用（setup.shで自動インストール）
 - [anyenv](https://github.com/anyenv/anyenv) - 各種言語バージョン管理
