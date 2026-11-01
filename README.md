@@ -35,7 +35,7 @@ macOS用の個人設定ファイル集
 
 ```bash
 # リポジトリをクローン
-git clone git@github.com:keisuke-yamauch1/dotfiles.git ~/dotfiles
+git clone git@github.com:kechiiiiin/dotfiles.git ~/dotfiles
 
 # セットアップスクリプトを実行
 ~/dotfiles/setup.sh
