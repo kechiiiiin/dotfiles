@@ -61,7 +61,7 @@ copy_file "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline
 copy_file "$DOTFILES_DIR/claude/hooks/discord-notify.py" "$HOME/.claude/hooks/discord-notify.py"
 copy_file "$DOTFILES_DIR/claude/scripts/save-conversation.py" "$HOME/.claude/scripts/save-conversation.py"
 
-# Hammerspoon（キーで場面を呼び出してウィンドウを並べる）。yashiki の後継（yashiki/ は戻すとき用に残してある）
+# Hammerspoon（キーで場面を呼び出してウィンドウを並べる）
 copy_file "$DOTFILES_DIR/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
 
 # .envは既存がなければsampleからコピー（既存の設定を上書きしない）
