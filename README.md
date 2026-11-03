@@ -21,6 +21,7 @@ macOS用の個人設定ファイル集
 | `claude/hooks/discord-notify.py` | Claude Code停止・通知時のDiscord通知スクリプト |
 | `claude/scripts/save-conversation.py` | 会話をObsidian vaultに自動保存するスクリプト |
 | `claude/.env.sample` | Claude Code用環境変数のテンプレート |
+| `hammerspoon/init.lua` | [Hammerspoon](https://www.hammerspoon.org/) の設定。キーを押したときだけ場面ごとにウィンドウを並べる（yashiki の後継） |
 | `yashiki/init` | [yashiki](https://github.com/typester/yashiki)（タグ型ウィンドウマネージャー）の起動スクリプト。全 PC 共通のキー割り当て・画面の見分け方 |
 | `yashiki/hosts/<LocalHostName>.sh` | yashiki の PC ごとの配置（タグとアプリの対応・タグごとの並べ方）。新しい PC は `scutil --get LocalHostName` の名前でファイルを足す |
 | `yashiki/seiretsu` | yashiki の整列キー（W+X／Option+X）。同じアプリの2枚目（Chrome・cmux など）が再起動で元の場所へ戻ったとき、決めた場所へ送り直して並べ直す |
@@ -30,6 +31,8 @@ macOS用の個人設定ファイル集
 | `yashiki/layouts/yashiki-layout-jiyuu` | yashiki の自作レイアウト: 何も並べない（フリーのタグ用） |
 | `yashiki/com.kechiiiiin.yashiki.plist` | ログイン時に yashiki を起動する LaunchAgent（setup.sh が登録する） |
 | `yashiki/layouts/winowner.swift` | ウィンドウの持ち主アプリを調べる道具。setup.sh がその PC でビルドする |
+
+`yashiki/` は 2026-11-03 に使うのをやめ、戻すとき用に残してある（setup.sh は配らない）。
 
 ## セットアップ
 
@@ -47,7 +50,6 @@ git clone git@github.com:kechiiiiin/dotfiles.git ~/dotfiles
 
 - [Homebrew](https://brew.sh/)
 - [Starship](https://starship.rs/) - `brew install starship`
-- [yashiki](https://github.com/typester/yashiki) - `brew tap typester/yashiki && brew install --cask yashiki`（初回にアクセシビリティ権限を許可する）
-- Xcode Command Line Tools - `xcode-select --install`（yashiki の自作レイアウトの python3 と swiftc）
+- [Hammerspoon](https://www.hammerspoon.org/) - `brew install --cask hammerspoon`（初回にアクセシビリティ権限を許可する）
 - [Hack Nerd Font](https://www.nerdfonts.com/) - Ghostty・Starship用（setup.shで自動インストール）
 - [anyenv](https://github.com/anyenv/anyenv) - 各種言語バージョン管理
