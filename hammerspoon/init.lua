@@ -157,31 +157,62 @@ local HOST = (hs.execute("scutil --get LocalHostName"):gsub("%s+$", ""))
 for i, scene in pairs(HOSTS[HOST] or {}) do SCENES[i] = scene end
 
 local current, previous
+local allWindowsFrontFirst
+
+-- 同じアプリ（Chrome・cmux）の窓が両方の画面にあると、そのアプリを前に出したとき、最後に使っていたもう片方の画面の窓まで
+-- 前に出て選ばれてしまう。並べたあと選び直し、もう片方の画面で手前だった窓を前へ戻してから、もう一度選ぶ（2026-11-04）
+-- 選び直すあいだ一瞬ちらつく。この PC だけ
+local KEEP_OTHER_FRONT = { ["keisukeyamauchinoMacBook-Pro"] = true }
 
 local function warp(w)
   if w then hs.mouse.absolutePosition(hs.geometry(w:frame()).center) end
 end
 
+-- もう片方の画面で手前の窓。場面のアプリの窓がもう片方の画面に無ければ、何も起きないので nil
+local function otherFront(s, out)
+  local pids, front, shared = {}, nil, false
+  for _, p in ipairs(out) do pids[p[1]:application():pid()] = true end
+  for _, w in ipairs(allWindowsFrontFirst()) do
+    if w:screen():id() ~= s:id() then
+      front = front or w
+      if pids[w:application():pid()] then shared = true end
+    end
+  end
+  if shared and front and not pids[front:application():pid()] then return front end
+end
+
 function showScene(i)
   local mac, dell = screens()
   local scene = SCENES[i]
+  local s = scene.on == "dell" and dell or mac
   local out = {}
-  scene.build(scene.on == "dell" and dell or mac, out)
+  scene.build(s, out)
   if #out == 0 then
     hs.alert.show(scene.name .. " は開いていません")
     return
   end
   if current ~= i then previous, current = current, i end
+  local keep = KEEP_OTHER_FRONT[HOST] and mac:id() ~= dell:id() and otherFront(s, out)
   for _, p in ipairs(out) do p[1]:setFrame(p[2], 0) end
   for k = #out, 1, -1 do out[k][1]:focus() end
   warp(out[1][1])
+  if keep then
+    local w = out[1][1]
+    hs.timer.doAfter(0.2, function()
+      w:focus()
+      hs.timer.doAfter(0.2, function()
+        keep:focus()
+        hs.timer.doAfter(0.2, function() w:focus(); warp(w) end)
+      end)
+    end)
+  end
 end
 
 -- 手前のウィンドウの操作
 local function focused() return hs.window.focusedWindow() end
 
 -- hs.window.orderedWindows は裏のプロセスにも問い合わせて数秒固まるので、Dock に出るアプリだけ見る
-local function allWindowsFrontFirst()
+allWindowsFrontFirst = function()
   local byId = {}
   for _, a in ipairs(hs.application.runningApplications()) do
     if a:kind() == 1 then
