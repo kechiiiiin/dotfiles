@@ -140,6 +140,12 @@ local CODE, SLACK, TABLEPLUS = "com.microsoft.VSCode", "com.tinyspeck.slackmacga
 local HOSTS = {
   -- 会社の MacBook Pro（2026-11-03）。DaVinci・Kindle・ChatGPT が無いので VS Code・Slack・TablePlus に替える
   ["keisukeyamauchinoMacBook-Pro"] = {
+    -- Chrome 2枚は、いま左にある方を左に置く（ID 順だと作った順で決まり、左右が思った向きと逆になる。2026-11-04）
+    [2] = { name = "Chrome", on = "dell", build = function(s, out)
+      local wins = pick(CHROME, s, 2, true)
+      table.sort(wins, function(a, b) return a:frame().x < b:frame().x end)
+      row(wins, area(s), out)
+    end },
     [3] = single("VS Code", "dell", CODE),
     [4] = single("cmux", "dell", CMUX),
     [5] = single("Slack", "mac", SLACK),
