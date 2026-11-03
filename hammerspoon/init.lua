@@ -132,6 +132,24 @@ local SCENES = {
   { name = "ChatGPT", on = "mac", build = function(s, out) row(pick(CHATGPT, s, 1, true), area(s), out) end },
 }
 
+-- PC ごとの場面の差し替え（LocalHostName で見分ける。書いていない PC は上の場面のまま）
+local function single(name, on, bundle)
+  return { name = name, on = on, build = function(s, out) row(pick(bundle, s, 1, true), area(s), out) end }
+end
+local CODE, SLACK, TABLEPLUS = "com.microsoft.VSCode", "com.tinyspeck.slackmacgap", "com.tinyapp.TablePlus"
+local HOSTS = {
+  -- 会社の MacBook Pro（2026-11-03）。DaVinci・Kindle・ChatGPT が無いので VS Code・Slack・TablePlus に替える
+  ["keisukeyamauchinoMacBook-Pro"] = {
+    [3] = single("VS Code", "dell", CODE),
+    [4] = single("cmux", "dell", CMUX),
+    [5] = single("Slack", "mac", SLACK),
+    [7] = single("TablePlus", "mac", TABLEPLUS),
+    [8] = single("cmux", "mac", CMUX),
+  },
+}
+local HOST = (hs.execute("scutil --get LocalHostName"):gsub("%s+$", ""))
+for i, scene in pairs(HOSTS[HOST] or {}) do SCENES[i] = scene end
+
 local current, previous
 
 local function warp(w)
