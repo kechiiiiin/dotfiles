@@ -181,6 +181,18 @@ local function otherFront(s, out)
   if shared and front and not pids[front:application():pid()] then return front end
 end
 
+-- w:focus() は主ウィンドウの切り替えを待たずにアプリを前面に出すので、そのアプリが直前に使っていた別のウィンドウまで上がる
+local function bringFront(w)
+  local app = w:application()
+  if not app then return end
+  local main = app:mainWindow()
+  if not main or main:id() ~= w:id() then
+    w:becomeMain()
+    hs.timer.usleep(100000)
+  end
+  app:_bringtofront()
+end
+
 function showScene(i)
   local mac, dell = screens()
   local scene = SCENES[i]
@@ -194,7 +206,11 @@ function showScene(i)
   if current ~= i then previous, current = current, i end
   local keep = KEEP_OTHER_FRONT[HOST] and mac:id() ~= dell:id() and otherFront(s, out)
   for _, p in ipairs(out) do p[1]:setFrame(p[2], 0) end
-  for k = #out, 1, -1 do out[k][1]:focus() end
+  for k = #out, 1, -1 do
+    bringFront(out[k][1])
+    -- 同じアプリの次の1枚へ移る前に、この1枚が前面に出るのを待つ
+    if k > 1 and out[k][1]:application() == out[k - 1][1]:application() then hs.timer.usleep(100000) end
+  end
   warp(out[1][1])
   if keep then
     local w = out[1][1]
@@ -239,7 +255,7 @@ local function focusOtherScreen()
   if not other then return end
   for _, c in ipairs(allWindowsFrontFirst()) do
     if c:screen():id() == other:id() then
-      c:focus()
+      bringFront(c)
       warp(c)
       return
     end
@@ -280,7 +296,7 @@ local function cycle(step)
   table.sort(list, function(a, b) return a:id() < b:id() end)
   for i, c in ipairs(list) do
     if c:id() == w:id() then
-      list[(i - 1 + step) % #list + 1]:focus()
+      bringFront(list[(i - 1 + step) % #list + 1])
       return
     end
   end
